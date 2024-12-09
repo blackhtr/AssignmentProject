@@ -13,10 +13,12 @@ import com.trheo.assignmentproject.wiki.ui.HomeScreen
 import com.trheo.assignmentproject.wiki.ui.ImageDetailScreen
 import com.trheo.assignmentproject.wiki.ui.SearchResultScreen
 import com.trheo.assignmentproject.wiki.ui.WikiDetailScreen
+import com.trheo.assignmentproject.wiki.viewmodel.SearchViewModel
 import com.trheo.assignmentproject.wiki.viewmodel.SharedViewModel
 
 @Composable
-fun AppNavHost(sharedViewModel: SharedViewModel = hiltViewModel()) {
+fun AppNavHost(
+    sharedViewModel: SharedViewModel = hiltViewModel()){
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Screen.Home.route) {
         // 홈 화면
@@ -53,6 +55,7 @@ fun AppNavHost(sharedViewModel: SharedViewModel = hiltViewModel()) {
                     info = it,
                     onKeywordClick = { keyword ->
                         // 키워드 클릭 시 검색 결과 화면으로 이동
+                        navController.popBackStack() // 현재 화면 종료
                         navController.navigate(Screen.SearchResult.route + "?query=$keyword")
                     }
                 )
@@ -62,7 +65,10 @@ fun AppNavHost(sharedViewModel: SharedViewModel = hiltViewModel()) {
         composable(Screen.ImageDetail.route) {
             val imageDetail by sharedViewModel.imageDetail.collectAsState()
             imageDetail?.let { detail ->
-                ImageDetailScreen(info = detail)
+                ImageDetailScreen(info = detail, onTagClick = {
+                    navController.popBackStack() // 현재 화면 종료
+                    navController.navigate(Screen.SearchResult.route + "?query=$it")
+                })
             }
         }
     }

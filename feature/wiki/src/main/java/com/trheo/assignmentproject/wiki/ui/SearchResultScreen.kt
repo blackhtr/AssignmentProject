@@ -32,7 +32,7 @@ fun SearchResultScreen(
     val scrollState = rememberLazyListState()
 
     LaunchedEffect(query) {
-        viewModel.search(query)
+        viewModel.updateQuery(query)
     }
 
     LazyColumn {

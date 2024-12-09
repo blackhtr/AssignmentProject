@@ -16,6 +16,10 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
     private val searchRepository: SearchRepository
 ) : ViewModel() {
+
+    private val _query = MutableStateFlow("") // 현재 검색어
+    val query: StateFlow<String> = _query
+
     private val _imageResults = MutableStateFlow<List<ImageResultInfo>>(emptyList())
     val imageResults: StateFlow<List<ImageResultInfo>> = _imageResults
 
@@ -24,25 +28,33 @@ class SearchViewModel @Inject constructor(
 
     private var currentPage = 1
 
-    fun search(query: String) {
+    init {
         viewModelScope.launch {
-            val images = searchRepository.searchImages(query, currentPage)
-            val wiki = searchRepository.searchWiki(query)
-            _imageResults.value = _imageResults.value + images
-            _wikiResults.value = wiki.take(3) // 최대 3개 제한
+            _query.collect { searchQuery ->
+                if (searchQuery.isNotEmpty()) {
+                    performSearch(searchQuery)
+                }
+            }
         }
     }
+     suspend fun performSearch(query: String) {
+        currentPage = 1
+        val images = searchRepository.searchImages(query, currentPage)
+        val wiki = searchRepository.searchWiki(query)
 
-    fun loadMoreImages(query: String) {
+        _imageResults.value = images
+        _wikiResults.value = wiki.take(3) // 최대 3개
+    }
+
+    fun loadMoreImages() {
         viewModelScope.launch {
             currentPage++
-            val moreImages = searchRepository.searchImages(query, currentPage)
+            val moreImages = searchRepository.searchImages(_query.value, currentPage)
             _imageResults.value = _imageResults.value + moreImages
         }
     }
-}
 
-data class SearchUiState(
-    val query: String = "",
-    val results: List<SearchResultInfo> = emptyList()
-)
+    fun updateQuery(newQuery: String) {
+        _query.value = newQuery // 검색어 업데이트
+    }
+}
