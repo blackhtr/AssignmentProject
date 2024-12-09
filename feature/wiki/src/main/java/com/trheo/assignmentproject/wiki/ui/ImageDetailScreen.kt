@@ -12,60 +12,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.trheo.assignmentproject.core.domain.entity.ImageResultInfo
 
 @Composable
 fun ImageDetailScreen(
-    user: String,
-    tags: List<String>,
-    size: Pair<Int, Int>,
-    views: Int,
-    downloads: Int,
-    imageUrl: String
+    info:ImageResultInfo
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
-            .verticalScroll(rememberScrollState())
     ) {
-        // 이미지
-        AsyncImage(
-            model = imageUrl,
-            contentDescription = null,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
-                .padding(bottom = 16.dp)
-        )
-
-        // 작성자
-        Text(
-            text = "작성자: $user",
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-
-        // 태그
-        Text(
-            text = "태그: ${tags.joinToString(", ")}",
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-
-        // 사이즈
-        Text(
-            text = "사이즈: ${size.first} x ${size.second}",
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-
-        // 조회수
-        Text(
-            text = "조회수: $views 회",
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-
-        // 다운로드 수
-        Text(
-            text = "다운로드: $downloads 회",
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
+        Text(text = "Title: ${info.user}")
+        Text(text = "Tags: ${info.tags}")
+        Text(text = "Size: ${info.width} x ${info.height}")
+        Text(text = "Views: ${info.views}")
+        Text(text = "Downloads: ${info.downloads}")
+        AsyncImage(model = info.imageUrl, contentDescription = null)
     }
 }

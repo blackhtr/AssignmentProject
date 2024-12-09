@@ -15,13 +15,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.trheo.assignmentproject.core.domain.entity.WikiResultInfo
 
 @Composable
 fun WikiDetailScreen(
-    title: String,
-    description: String,
-    imageUrl: String?,
-    sourceUrl: String,
+    info:WikiResultInfo,
     onKeywordClick: (String) -> Unit
 ) {
     Column(
@@ -32,12 +30,12 @@ fun WikiDetailScreen(
     ) {
         // 타이틀
         Text(
-            text = title,
+            text = info.title,
             modifier = Modifier.padding(bottom = 8.dp)
         )
 
         // 이미지 (옵션)
-        imageUrl?.let {
+        info.imageUrl?.let {
             AsyncImage(
                 model = it,
                 contentDescription = null,
@@ -50,15 +48,15 @@ fun WikiDetailScreen(
 
         // 상세 정보
         Text(
-            text = description,
+            text = info.description,
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
         // 키워드 (재검색)
         Text(
-            text = "키워드: $title",
+            text = "키워드: ${info.keyword}",
             modifier = Modifier
-                .clickable { onKeywordClick(title) }
+                .clickable { onKeywordClick(info.keyword) }
                 .padding(vertical = 8.dp)
         )
 
