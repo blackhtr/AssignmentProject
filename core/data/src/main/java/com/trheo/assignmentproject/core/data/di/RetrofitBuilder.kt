@@ -1,4 +1,4 @@
-package com.trheo.assignmentproject.core.data.service.di
+package com.trheo.assignmentproject.core.data.di
 
 import com.trheo.assignmentproject.core.data.service.PixabayApi
 import com.trheo.assignmentproject.core.data.service.WikiApi
