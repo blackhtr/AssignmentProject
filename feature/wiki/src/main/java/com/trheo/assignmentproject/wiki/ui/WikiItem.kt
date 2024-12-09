@@ -32,7 +32,6 @@ fun WikiItem(wikiResult: WikiResultInfo, onClick: () -> Unit) {
             .border(
                 width = 1.dp,
                 color = Color.Black,
-                shape = MaterialTheme.shapes.medium
             )
             .clickable { onClick() },
         horizontalAlignment = Alignment.CenterHorizontally

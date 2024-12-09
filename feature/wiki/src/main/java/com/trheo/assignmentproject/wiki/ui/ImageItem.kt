@@ -25,11 +25,10 @@ fun FirstImageItem(imageResult: ImageResultInfo, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(8.dp)
             .border(
                 width = 1.dp,
-                color = Color.Black,
-                shape = MaterialTheme.shapes.medium
+                color = Color.Black
             )
             .clickable { onClick() }
     ) {
@@ -63,7 +62,6 @@ fun ImageListItem(imageResult: ImageResultInfo, onClick: () -> Unit) {
             .border(
                 width = 1.dp,
                 color = Color.Black,
-                shape = MaterialTheme.shapes.medium
             ),
         verticalAlignment = Alignment.CenterVertically // 높이 가운데 정렬
 
