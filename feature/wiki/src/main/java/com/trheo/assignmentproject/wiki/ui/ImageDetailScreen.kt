@@ -22,21 +22,23 @@ fun ImageDetailScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text(text = "Title: ${info.user}")
-
+        Text(text = "작성자 : ${info.user}",
+            modifier = Modifier.padding(bottom = 8.dp))
         Row(
-            modifier = Modifier.padding(vertical = 8.dp),
+            modifier = Modifier.padding(bottom = 8.dp),
         ) {
+            Text(text = "태그 : ")
             info.tags.split(", ").forEach { tag ->
                 Text(text = "#$tag",
                     modifier = Modifier.clickable { onTagClick(tag) })
             }
         }
-
-        Text(text = "Tags: ${info.tags}")
-        Text(text = "Size: ${info.width} x ${info.height}")
-        Text(text = "Views: ${info.views}")
-        Text(text = "Downloads: ${info.downloads}")
+        Text(text = "사이즈 : ${info.width} x ${info.height}",
+            modifier = Modifier.padding(bottom = 8.dp))
+        Text(text = "조회 : ${info.views}",
+            modifier = Modifier.padding(bottom = 8.dp))
+        Text(text = "다운로드 : ${info.downloads}",
+            modifier = Modifier.padding(bottom = 8.dp))
         AsyncImage(model = info.imageUrl, contentDescription = null)
     }
 }
