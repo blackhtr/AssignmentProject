@@ -12,12 +12,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.trheo.assignmentproject.core.domain.entity.ImageResultInfo
 import com.trheo.assignmentproject.core.domain.entity.WikiResultInfo
 import com.trheo.assignmentproject.wiki.viewmodel.SearchViewModel
+import kotlinx.coroutines.flow.filter
 
 
 @Composable
@@ -31,11 +33,21 @@ fun SearchResultScreen(
     val wikiResults by viewModel.wikiResults.collectAsState()
     val scrollState = rememberLazyListState()
 
+    // 스크롤이 끝에 도달했을 때 추가 이미지 로드
+    LaunchedEffect(scrollState) {
+        snapshotFlow { scrollState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
+            .filter { it == imageResults.size - 1 } // 마지막 아이템이 보일 때
+            .collect {
+                val query = viewModel.query.value
+                if (query.isNotEmpty()) { viewModel.loadMoreImages(query) }
+            }
+    }
+
     LaunchedEffect(query) {
         viewModel.updateQuery(query)
     }
 
-    LazyColumn {
+    LazyColumn(state = scrollState) {
         // 검색어 표시
         item {
             Text(

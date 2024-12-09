@@ -3,7 +3,6 @@ package com.trheo.assignmentproject.wiki.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.trheo.assignmentproject.core.domain.entity.ImageResultInfo
-import com.trheo.assignmentproject.core.domain.entity.SearchResultInfo
 import com.trheo.assignmentproject.core.domain.entity.WikiResultInfo
 import com.trheo.core.domain.repository.SearchRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,6 +26,7 @@ class SearchViewModel @Inject constructor(
     val wikiResults: StateFlow<List<WikiResultInfo>> = _wikiResults
 
     private var currentPage = 1
+    private var isFetchingImages = false // 중복 호출 방지
 
     init {
         viewModelScope.launch {
@@ -46,11 +46,21 @@ class SearchViewModel @Inject constructor(
         _wikiResults.value = wiki.take(3) // 최대 3개
     }
 
-    fun loadMoreImages() {
+
+    fun loadMoreImages(query: String) {
+        if (isFetchingImages) return // 중복 호출 방지
+        isFetchingImages = true
+
         viewModelScope.launch {
             currentPage++
-            val moreImages = searchRepository.searchImages(_query.value, currentPage)
-            _imageResults.value = _imageResults.value + moreImages
+            try {
+                val moreImages = searchRepository.searchImages(query, currentPage)
+                _imageResults.value = _imageResults.value + moreImages
+            } catch (e: Exception) {
+                // 에러 처리
+            } finally {
+                isFetchingImages = false
+            }
         }
     }
 
