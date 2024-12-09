@@ -33,7 +33,7 @@ fun WikiDetailScreen(
 
         // 키워드 (재검색)
         Text(
-            text = "키워드 : ${info.keyword}",
+            text = "키워드 : #${info.keyword}",
             modifier = Modifier
                 .clickable { onKeywordClick(info.keyword) }
                 .padding(vertical = 8.dp)
